@@ -1,10 +1,13 @@
+package converter;
+
 import Model.DataReceive;
 import Model.Measurement;
+import converter.MeasurementConverter;
 
 import javax.swing.*;
 import java.util.Date;
 
-public class ConvertMeasurements {
+public class ConvertMeasurements implements MeasurementConverter {
     private String data;
     private Measurement measurement;
     private DataReceive model;
