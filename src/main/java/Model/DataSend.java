@@ -9,7 +9,7 @@ public class DataSend {
 
     //Class for serializing in jason telegram for sending back to the iot
     public DataSend(String cmd, String EUI, int port, boolean confirmed, String data) {
-        this.cmd = cmd;
+        this.cmd = "tx";
         this.EUI = EUI;
         this.port = port;
         this.confirmed = confirmed;

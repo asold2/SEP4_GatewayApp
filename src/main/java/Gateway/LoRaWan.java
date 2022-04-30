@@ -18,6 +18,7 @@ public class LoRaWan implements WebSocket.Listener {
         CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
                 .buildAsync(URI.create(url), this);
         server = ws.join();
+
     }
 
 

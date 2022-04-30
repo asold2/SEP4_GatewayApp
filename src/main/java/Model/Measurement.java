@@ -9,5 +9,31 @@ public class Measurement {
     private double co2;
     private Date date;
 
+    public Measurement(String EUI, double temperature, double humidity, double co2, Date date) {
+        this.EUI = EUI;
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.co2 = co2;
+        this.date = date;
+    }
 
+    public String getEUI() {
+        return EUI;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public double getCo2() {
+        return co2;
+    }
+
+    public Date getDate() {
+        return date;
+    }
 }
