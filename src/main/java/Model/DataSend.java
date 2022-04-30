@@ -20,39 +20,19 @@ public class DataSend {
         return cmd;
     }
 
-    public void setCmd(String cmd) {
-        this.cmd = cmd;
-    }
-
     public String getEUI() {
         return EUI;
-    }
-
-    public void setEUI(String EUI) {
-        this.EUI = EUI;
     }
 
     public int getPort() {
         return port;
     }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public boolean isConfirmed() {
         return confirmed;
     }
 
-    public void setConfirmed(boolean confirmed) {
-        this.confirmed = confirmed;
-    }
-
     public String getData() {
         return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
     }
 }

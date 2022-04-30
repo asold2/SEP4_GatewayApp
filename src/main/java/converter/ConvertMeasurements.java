@@ -2,9 +2,7 @@ package converter;
 
 import Model.DataReceive;
 import Model.Measurement;
-import converter.MeasurementConverter;
 
-import javax.swing.*;
 import java.util.Date;
 
 public class ConvertMeasurements implements MeasurementConverter {
@@ -12,7 +10,7 @@ public class ConvertMeasurements implements MeasurementConverter {
     private Measurement measurement;
     private DataReceive model;
 
-    public ConvertMeasurements(String data) {
+    public ConvertMeasurements(String dataReceiveData) {
         this.data = data;
     }
 
@@ -25,10 +23,10 @@ public class ConvertMeasurements implements MeasurementConverter {
     }
 
     //Send to the data server
-    public Measurement convert(String data) {
+    public Measurement convert(String data, String EUI, long ts) {
         //////
+//logic to convert the hexadecimal from String data
 
-
-        return new Measurement(model.getCmd(), 1, 1, 1, new Date(model.getTs()));
+        return new Measurement( EUI, 1, 1, 1,new Date(ts));
     }
 }

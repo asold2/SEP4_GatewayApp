@@ -1,6 +1,10 @@
 package Gateway;
 
 import Model.DataReceive;
+import Model.Measurement;
+import com.google.gson.JsonElement;
+import converter.ConvertMeasurements;
+import converter.MeasurementConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.boot.json.GsonJsonParser;
@@ -14,8 +18,12 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CompletableFuture;
 
+import com.google.gson.Gson;
+
+
 public class LoRaWan implements WebSocket.Listener, ILoRaWan {
     private WebSocket server = null;
+    Gson gson = new Gson();
     private String url="wss://iotnet.teracom.dk/app?token=vnoUeAAAABFpb3RuZXQudGVyYWNvbS5kawhxYha6idspsvrlQ4C7KWA=";
     PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -84,18 +92,37 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
     //Need to support.fireEvent()
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
         String indented = null;
-//        DataReceive dataReceive = gson.deserialize(data, DataReceive.class)
 
-//        ConvertMeasurements measurement = new ConvertMeasurements(datareceive.getData); // This data will be the hex
+        MeasurementConverter measurementConverter = null;
+
+
+
+        Measurement measurement = null;
         try {
             indented = (new JSONObject(data.toString())).toString(4);
+            DataReceive dataReceive =  gson.fromJson( indented, DataReceive.class);
+            System.out.println(dataReceive);
+            System.out.println(dataReceive.getData() + " !!!!!!!!!!!!");
+            measurementConverter = new ConvertMeasurements(dataReceive.getData()); // This data will be the hex
+
+
+            measurement =  measurementConverter.convert(dataReceive.getData(),dataReceive.getEUI(), dataReceive.getTs());
+
+            if(measurement==null ){
+                support.firePropertyChange("error", null, "");
+                System.out.println("Error on getting message");
+            }
+            else{
+                support.firePropertyChange("received_measurement", null, measurement);
+                System.out.println("Fired received_measurement");
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         System.out.println(indented);
 
-//        support.firePropertyChange("received_measurement");
+        System.out.println(measurement + "???????????????");
         webSocket.request(1);
         return new CompletableFuture().completedFuture("onText() completed.").thenAccept(System.out::println);
     };
