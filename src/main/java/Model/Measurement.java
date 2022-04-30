@@ -36,4 +36,15 @@ public class Measurement {
     public Date getDate() {
         return date;
     }
+
+    @Override
+    public String toString() {
+        return "Measurement{" +
+                "EUI='" + EUI + '\'' +
+                ", temperature=" + temperature +
+                ", humidity=" + humidity +
+                ", co2=" + co2 +
+                ", date=" + date +
+                '}';
+    }
 }
