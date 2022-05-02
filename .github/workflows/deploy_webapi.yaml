@@ -84,7 +84,7 @@ jobs:
         with:
           # To make this work, you need to create an IAM User (ideally with least
           # privilege access) and store the generated Access key ID and Secret
-          # access key to your GitHub repository Secrets.
+          # access key to your GitHub repository Secrets. // POOP SKI DOOP
           # > DO NOT HARDCODE THE VALUES DIRECTLY INTO THE CODE !!!
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
