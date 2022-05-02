@@ -1,6 +1,5 @@
-package RestConnection.NotificationController;
+package RestConnection;
 
-import Gateway.LoRaWan;
 import client.Client;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
