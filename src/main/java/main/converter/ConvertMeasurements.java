@@ -1,7 +1,7 @@
-package converter;
+package main.converter;
 
-import Model.DataReceive;
-import Model.Measurement;
+import main.Model.DataReceive;
+import main.Model.Measurement;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package Gateway;
+package main.Gateway;
 
 import java.beans.PropertyChangeListener;
 

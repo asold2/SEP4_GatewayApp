@@ -1,10 +1,10 @@
-package Gateway;
+package main.Gateway;
 
-import Model.DataReceive;
-import Model.Measurement;
+import main.Model.DataReceive;
+import main.Model.Measurement;
 import com.google.gson.Gson;
-import converter.ConvertMeasurements;
-import converter.MeasurementConverter;
+import main.converter.ConvertMeasurements;
+import main.converter.MeasurementConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
 

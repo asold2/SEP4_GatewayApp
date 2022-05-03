@@ -1,15 +1,10 @@
-package client;
+package main.client;
 
-import Gateway.ILoRaWan;
-import Gateway.LoRaWan;
-import Model.Measurement;
-import converter.ConvertMeasurements;
-import converter.MeasurementConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import main.Gateway.ILoRaWan;
+import main.Gateway.LoRaWan;
+import main.Model.Measurement;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
@@ -25,19 +20,15 @@ public class Client {
     @Value("$(api.url)")
     private static String GET_URL;
 
-    private ILoRaWan loRaWan = new LoRaWan();
-    private MeasurementConverter measurementConverter;
 
-
-
-    public Client(){
-        loRaWan.addPropertyChangeListener("received_measurement", evt ->postMeasurement((Measurement) evt.getNewValue()));
+    public Client() {
+        ILoRaWan loRaWan = new LoRaWan();
+        loRaWan.addPropertyChangeListener("received_measurement", evt -> postMeasurement((Measurement) evt.getNewValue()));
 
     }
 
     //Add event to the paramter of the method.
-    private void postMeasurement(Measurement data)
-    {
+    private void postMeasurement(Measurement data) {
         System.out.println("Reached the method in Client!!!!");
 //WE RECEIVE BACK THE JSON WITH THRESHOLDS, DESERIALIZE THEM, AND SEND THEM TO IOT.
 
@@ -52,20 +43,20 @@ public class Client {
     }
 
     private String sendGetTest() throws IOException {
-        URL obj = new URL(GET_URL);
+        URL obj = new URL("http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/");
         HttpURLConnection con = (HttpURLConnection)
                 obj.openConnection();
         con.setRequestMethod("GET");
         int responseCode = con.getResponseCode();
         System.out.println("GET RESPONSE CODE :: " + responseCode);
 
-        if(responseCode == HttpURLConnection.HTTP_OK) {
+        if (responseCode == HttpURLConnection.HTTP_OK) {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     con.getInputStream()
             ));
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -78,14 +69,14 @@ public class Client {
 
     }
 
-    @PostMapping("/test/")
-    public void testPost(){
+    @GetMapping("/")
+    public String testPost() {
         try {
-            System.out.println(sendGetTest());
+            return sendGetTest();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "Error";
     }
-
 }
 
