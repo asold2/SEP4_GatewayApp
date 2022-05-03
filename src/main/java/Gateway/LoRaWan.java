@@ -2,12 +2,11 @@ package Gateway;
 
 import Model.DataReceive;
 import Model.Measurement;
-import com.google.gson.JsonElement;
+import com.google.gson.Gson;
 import converter.ConvertMeasurements;
 import converter.MeasurementConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.boot.json.GsonJsonParser;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -15,10 +14,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.nio.ByteBuffer;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.CompletableFuture;
-
-import com.google.gson.Gson;
+import java.util.concurrent.CompletionStage;
 
 
 public class LoRaWan implements WebSocket.Listener, ILoRaWan {
