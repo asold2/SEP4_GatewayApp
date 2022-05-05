@@ -12,7 +12,7 @@ public class ConvertMeasurements implements MeasurementConverter {
     private DataReceive model;
 
     public ConvertMeasurements(String dataReceiveData) {
-        this.data = data;
+        this.data = dataReceiveData;
     }
 
     public String getData() {
