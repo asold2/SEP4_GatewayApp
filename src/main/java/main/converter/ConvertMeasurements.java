@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class ConvertMeasurements implements MeasurementConverter {
     private String data;
+    //s
     private Measurement measurement;
     private DataReceive model;
 

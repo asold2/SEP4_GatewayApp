@@ -38,6 +38,9 @@ public class Client {
         //http request
 
 
+
+
+
         //Todo
         //receive back null or new thresholds depending on the time you check in data server
     }
