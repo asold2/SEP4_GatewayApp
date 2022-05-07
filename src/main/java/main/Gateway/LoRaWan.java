@@ -98,7 +98,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
         try {
             indented = (new JSONObject(data.toString())).toString(4);
             DataReceive dataReceive =  gson.fromJson( indented, DataReceive.class);
-            System.out.println(dataReceive);
+//            System.out.println(dataReceive);
             System.out.println(dataReceive.getData() + " !!!!!!!!!!!!");
             measurementConverter = new ConvertMeasurements(dataReceive.getData()); // This data will be the hex
 

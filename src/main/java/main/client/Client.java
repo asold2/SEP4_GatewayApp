@@ -1,5 +1,7 @@
 package main.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import main.Gateway.ILoRaWan;
 import main.Gateway.LoRaWan;
 import main.Model.Measurement;
@@ -11,7 +13,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 //Should be an Observer for when the LoraWan receives data from iot.
 @RestController
@@ -27,29 +33,47 @@ public class Client {
 
     }
 
-    //Add event to the paramter of the method.
-    private void postMeasurement(Measurement data) {
-        System.out.println("Reached the method in Client!!!!");
-//WE RECEIVE BACK THE JSON WITH THRESHOLDS, DESERIALIZE THEM, AND SEND THEM TO IOT.
 
-        System.out.println(data.toString());
+    public void postMeasurement(Measurement data) {
+        String requestBody = "";
+        var objectMapper = new ObjectMapper();
+        try {
+            requestBody = objectMapper
+                    .writeValueAsString(data);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest reuqest = HttpRequest.newBuilder()
+//                .uri(URI.create("http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/"))
+                .uri(URI.create("http://localhost:8082/measurement/"))
 
-        //Todo
-        //http request
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+        HttpResponse<String> response = null;
+        try {
+            response = client.send(reuqest, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Tell me it's sending");
+            System.out.println(data.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(response.body());
 
 
 
 
 
-        //Todo
-        //receive back null or new thresholds depending on the time you check in data server
     }
 
     private String sendGetTest() throws IOException {
-        URL obj = new URL("http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/");
+        URL obj = new URL("http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/");
         HttpURLConnection con = (HttpURLConnection)
                 obj.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("POST");
         int responseCode = con.getResponseCode();
         System.out.println("GET RESPONSE CODE :: " + responseCode);
 
@@ -66,7 +90,7 @@ public class Client {
             in.close();
             return response.toString();
         } else {
-            System.out.println("GET request failed");
+            System.out.println("POST request failed");
             return "fail";
         }
 
