@@ -1,11 +1,9 @@
 package main.Model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.io.Serializable;
 import java.util.Date;
 
-public class Measurement {
+public class Measurement implements Serializable {
     //this is the EUI but had to rename to roomID
     private String roomId;
     private double temperature;
@@ -13,12 +11,12 @@ public class Measurement {
     private double co2;
     private Date date;
 
-    public Measurement( String roomId, double temperature, double humidity, double co2, Date date) {
+    public Measurement(Date date, String roomId, double temperature, double humidity, double co2) {
+        this.date = date;
         this.roomId = roomId;
         this.temperature = temperature;
         this.humidity = humidity;
         this.co2 = co2;
-        this.date = date;
     }
 
     public String getRoomId() {

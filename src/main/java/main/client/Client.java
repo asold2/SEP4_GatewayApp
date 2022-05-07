@@ -6,8 +6,11 @@ import main.Gateway.ILoRaWan;
 import main.Gateway.LoRaWan;
 import main.Model.Measurement;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,55 +21,52 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 //Should be an Observer for when the LoraWan receives data from iot.
 @RestController
 public class Client {
 
+    private final RestTemplate restTemplate;
+
     @Value("$(api.url)")
     private static String GET_URL;
 
 
-    public Client() {
+    public Client(RestTemplateBuilder restTemplateBuilder) {
         ILoRaWan loRaWan = new LoRaWan();
         loRaWan.addPropertyChangeListener("received_measurement", evt -> postMeasurement((Measurement) evt.getNewValue()));
-
+        this.restTemplate = restTemplateBuilder.build();
     }
 
+    public Measurement postMeasurement(Measurement data) {
+        String url = "http://localhost:8082/measurement/";
 
-    public void postMeasurement(Measurement data) {
-        String requestBody = "";
-        var objectMapper = new ObjectMapper();
-        try {
-            requestBody = objectMapper
-                    .writeValueAsString(data);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("date", data.getDate());
+        map.put("roomId", data.getRoomId());
+        map.put("temperature", data.getTemperature());
+        map.put("humidity", data.getHumidity());
+        map.put("co2", data.getCo2());
+
+        HttpEntity<Map<String, Object>> measurement = new HttpEntity<>(map, headers);
+
+        ResponseEntity<Measurement> response = this.restTemplate.postForEntity(url, measurement, Measurement.class);
+
+        if(response.getStatusCode() == HttpStatus.CREATED){
+            return response.getBody();
+        } else {
+            return null;
         }
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest reuqest = HttpRequest.newBuilder()
-//                .uri(URI.create("http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/"))
-                .uri(URI.create("http://localhost:8082/measurement/"))
-
-                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(reuqest, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Tell me it's sending");
-            System.out.println(data.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(response.body());
-
-
-
-
-
     }
 
     private String sendGetTest() throws IOException {

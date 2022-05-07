@@ -48,7 +48,7 @@ public class ConvertMeasurements implements MeasurementConverter {
         System.out.println(humidity + "ccccc");
 
 
-        Measurement measurement = new Measurement( EUI, temperature, humidity, co2,new Date(ts));
+        Measurement measurement = new Measurement(new Date(ts), EUI, temperature, humidity, co2);
         System.out.println(measurement.toString() + "Heeeeererere is the measurment");
         return measurement;
     }
