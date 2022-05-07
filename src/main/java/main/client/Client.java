@@ -62,6 +62,8 @@ public class Client {
 
         ResponseEntity<Measurement> response = this.restTemplate.postForEntity(url, measurement, Measurement.class);
 
+        System.out.println("Sent measurement to cloud");
+
         if(response.getStatusCode() == HttpStatus.CREATED){
             return response.getBody();
         } else {

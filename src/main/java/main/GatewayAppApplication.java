@@ -16,8 +16,8 @@ public class GatewayAppApplication {
     public static void main(String[] args) {
         SpringApplication.run(GatewayAppApplication.class, args);
         Client client = new Client(new RestTemplateBuilder());
-        System.out.println("Something");
-        client.postMeasurement(new Measurement(new Date(Instant.now().toEpochMilli()),"0004A30B00219CAC", 22.0, 48.0, 1050.0));
+//        System.out.println("Something");
+//        client.postMeasurement(new Measurement(new Date(Instant.now().toEpochMilli()),"0004A30B00219CAC", 22.0, 48.0, 1050.0));
 
     }
 
