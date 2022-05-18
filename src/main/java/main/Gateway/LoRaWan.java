@@ -89,11 +89,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
     //Need to support.fireEvent()
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
         String indented = null;
-
         MeasurementConverter measurementConverter = null;
-
-
-
         Measurement measurement = null;
         try {
             indented = (new JSONObject(data.toString())).toString(4);
