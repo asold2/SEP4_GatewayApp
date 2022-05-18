@@ -38,6 +38,7 @@ public class Client {
 
     public Client(RestTemplateBuilder restTemplateBuilder) {
         ILoRaWan loRaWan = new LoRaWan();
+        loRaWan.init();
         loRaWan.addPropertyChangeListener("received_measurement", evt -> postMeasurement((Measurement) evt.getNewValue()));
         this.restTemplate = restTemplateBuilder.build();
     }
@@ -60,6 +61,7 @@ public class Client {
 
         HttpEntity<Map<String, Object>> measurement = new HttpEntity<>(map, headers);
 
+        //Thgis response should be the Temperature Threshold
         ResponseEntity<Measurement> response = this.restTemplate.postForEntity(url, measurement, Measurement.class);
 
         System.out.println("Sent measurement to cloud");
@@ -69,6 +71,9 @@ public class Client {
         } else {
             return null;
         }
+
+        // call the method that converts to Hex and then returns a DataSend obj.
+
     }
 
     private String sendGetTest() throws IOException {

@@ -1,6 +1,8 @@
 package main.Model;
 
-public class DataSend {
+import java.io.Serializable;
+
+public class DataSend implements Serializable {
    public String cmd;
    private String EUI;
    private int port;

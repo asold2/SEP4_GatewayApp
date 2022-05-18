@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TempThresholdController {
 
+
+
     @PostMapping("/send/tempThreshold/")
     public void sendTempThresholdToIoT(@RequestBody TemperatureThreshold temperatureThreshold){
         System.out.println(temperatureThreshold);
