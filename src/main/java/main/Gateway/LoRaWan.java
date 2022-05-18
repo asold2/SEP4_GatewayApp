@@ -8,7 +8,6 @@ import main.converter.ConvertMeasurements;
 import main.converter.MeasurementConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -20,30 +19,28 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class LoRaWan implements WebSocket.Listener, ILoRaWan {
-    private WebSocket server = null;
+    private WebSocket server = init();
     Gson gson = new Gson();
-    private String url="wss://iotnet.teracom.dk/app?token=vnoUeAAAABFpb3RuZXQudGVyYWNvbS5kawhxYha6idspsvrlQ4C7KWA=";
+    static private String url="wss://iotnet.teracom.dk/app?token=vnoUeAAAABFpb3RuZXQudGVyYWNvbS5kawhxYha6idspsvrlQ4C7KWA=";
     PropertyChangeSupport support = null;
 
     public LoRaWan() {
         support = new PropertyChangeSupport(this);
-//        init();
     }
 
-public void init(){
+public WebSocket init(){
     HttpClient client = HttpClient.newHttpClient();
     CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
             .buildAsync(URI.create(url), this);
-    server = ws.join();
+    return ws.join();
 
 }
 
     //method for sen
     //To send to iot
     public void sendDownLink(String jsonTelegram) throws InterruptedException {
-//        Thread.sleep(10000);
-
         server.sendText(jsonTelegram,true);
+        System.out.println("I JUST SEND DATA");
     }
 
     @Override
@@ -60,22 +57,9 @@ public void init(){
 
     //onOpen()
     public void onOpen(WebSocket webSocket) {
-        // This WebSocket will invoke onText, onBinary, onPing, onPong or onClose methods on the associated listener (i.e. receive methods) up to n more times
-        webSocket.request(1);
+        webSocket.request(1L);
 
-        try{
-        Gson gson = new Gson();
-        DataSend toSend = new DataSend("tx", "0004A30B00219CAC", 2, true, "1000100010001000");
-        String intended = "";
-        intended = gson.toJson(toSend);
-        System.out.println(intended + "sdasgfvasdfv");
-        sendDownLink(intended);
-
-    }catch (Exception e){
-        System.out.println( e + "AAAAAAAAAAA");
-    }
-
-
+        send();
     }
 //    public void onOpen(WebSocket webSocket) {
 //        // This WebSocket will invoke onText, onBinary, onPing, onPong or onClose methods on the associated listener (i.e. receive methods) up to n more times
@@ -112,7 +96,31 @@ public void init(){
     };
     //onText()
     //Need to support.fireEvent()
+
+    public void send(){
+            System.out.println("Still not ready");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                Gson gson = new Gson();
+                DataSend toSend = new DataSend("tx", "0004A30B00219CAC", 2
+                        , false, "1000100010001000");
+                String intended = "";
+                intended = gson.toJson(toSend);
+                System.out.println(intended + "sdasgfvasdfv");
+                sendDownLink(intended);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (Exception e){
+                System.out.println("I will do great violence " + e.getMessage());
+            }
+    }
+
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
+        System.out.println(data.toString());
         String indented = null;
         MeasurementConverter measurementConverter = null;
         Measurement measurement = null;
@@ -122,7 +130,6 @@ public void init(){
 //            System.out.println(dataReceive);
             System.out.println(dataReceive.getData() + " !!!!!!!!!!!!");
             measurementConverter = new ConvertMeasurements(dataReceive.getData()); // This data will be the hex
-
 
             measurement =  measurementConverter.convert(dataReceive.getData(),dataReceive.getEUI(), dataReceive.getTs());
 
@@ -135,6 +142,7 @@ public void init(){
                 System.out.println("Fired received_measurement");
             }
 
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -142,6 +150,8 @@ public void init(){
 
         System.out.println(measurement + "???????????????");
         webSocket.request(1);
+
+
         return new CompletableFuture().completedFuture("onText() completed.").thenAccept(System.out::println);
     };
 }

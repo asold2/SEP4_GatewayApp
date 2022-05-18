@@ -1,11 +1,8 @@
 package main.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import main.Gateway.ILoRaWan;
 import main.Gateway.LoRaWan;
 import main.Model.Measurement;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +13,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +24,6 @@ public class Client {
 
     private final RestTemplate restTemplate;
 
-    @Value("$(api.url)")
-    private static String GET_URL;
-
-
     public Client(RestTemplateBuilder restTemplateBuilder) {
         ILoRaWan loRaWan = new LoRaWan();
         loRaWan.init();
@@ -44,7 +32,7 @@ public class Client {
     }
 
     public Measurement postMeasurement(Measurement data) {
-        String url = "http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/";
+        String url = "http://192.168.1.230:5000/measurement/";
 
         HttpHeaders headers = new HttpHeaders();
 
