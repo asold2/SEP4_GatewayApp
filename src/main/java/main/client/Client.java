@@ -3,6 +3,7 @@ package main.client;
 import main.Gateway.ILoRaWan;
 import main.Gateway.LoRaWan;
 import main.Model.Measurement;
+import main.tempThreshold.TemperatureThreshold;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +32,8 @@ public class Client {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public Measurement postMeasurement(Measurement data) {
-        String url = "http://192.168.1.230:5000/measurement/";
+    public TemperatureThreshold postMeasurement(Measurement data) {
+        String url = "http://localhost:5000/measurement/";
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -47,10 +48,12 @@ public class Client {
         map.put("humidity", data.getHumidity());
         map.put("co2", data.getCo2());
 
+
+
         HttpEntity<Map<String, Object>> measurement = new HttpEntity<>(map, headers);
 
         //Thgis response should be the Temperature Threshold
-        ResponseEntity<Measurement> response = this.restTemplate.postForEntity(url, measurement, Measurement.class);
+        ResponseEntity<TemperatureThreshold> response = this.restTemplate.postForEntity(url, measurement, TemperatureThreshold.class);
 
         System.out.println("Sent measurement to cloud");
 

@@ -106,7 +106,7 @@ public WebSocket init(){
             }
             try {
                 Gson gson = new Gson();
-                DataSend toSend = new DataSend("tx", "0004A30B00219CAC", 2
+                DataSend toSend = new DataSend("tx", "roomNumber", 2
                         , false, "1000100010001000");
                 String intended = "";
                 intended = gson.toJson(toSend);
