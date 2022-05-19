@@ -2,8 +2,11 @@ package main.client;
 
 import main.Gateway.ILoRaWan;
 import main.Gateway.LoRaWan;
+import main.Model.DataSend;
 import main.Model.Measurement;
-import main.tempThreshold.TemperatureThreshold;
+import main.converter.IThresholdToDataSendCoverter;
+import main.converter.ThresholdToDataSendCoverterImpl;
+import main.threshold.Threshold;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,15 +27,16 @@ import java.util.Map;
 public class Client {
 
     private final RestTemplate restTemplate;
+    private ILoRaWan loRaWan = null;
 
     public Client(RestTemplateBuilder restTemplateBuilder) {
-        ILoRaWan loRaWan = new LoRaWan();
+        loRaWan = new LoRaWan();
         loRaWan.init();
         loRaWan.addPropertyChangeListener("received_measurement", evt -> postMeasurement((Measurement) evt.getNewValue()));
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public TemperatureThreshold postMeasurement(Measurement data) {
+    public Threshold postMeasurement(Measurement data) {
         String url = "http://localhost:5000/measurement/";
 
         HttpHeaders headers = new HttpHeaders();
@@ -53,15 +57,21 @@ public class Client {
         HttpEntity<Map<String, Object>> measurement = new HttpEntity<>(map, headers);
 
         //Thgis response should be the Temperature Threshold
-        ResponseEntity<TemperatureThreshold> response = this.restTemplate.postForEntity(url, measurement, TemperatureThreshold.class);
-
+        ResponseEntity<Threshold> response = this.restTemplate.postForEntity(url, measurement, Threshold.class);
+        System.out.println(response.getBody() + "!!!!!!!!!!!!!!!!!!!!!!!");
         System.out.println("Sent measurement to cloud");
 
+        IThresholdToDataSendCoverter sender = new ThresholdToDataSendCoverterImpl();
+        DataSend finallySending = sender.convertThresholdToData(response.getBody());
+
+
         if(response.getStatusCode() == HttpStatus.CREATED){
+            loRaWan.send(finallySending);
             return response.getBody();
         } else {
             return null;
         }
+
 
         // call the method that converts to Hex and then returns a DataSend obj.
 

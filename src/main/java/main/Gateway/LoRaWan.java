@@ -8,6 +8,7 @@ import main.converter.ConvertMeasurements;
 import main.converter.MeasurementConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -26,6 +27,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
 
     public LoRaWan() {
         support = new PropertyChangeSupport(this);
+//        init();
     }
 
 public WebSocket init(){
@@ -39,6 +41,8 @@ public WebSocket init(){
     //method for sen
     //To send to iot
     public void sendDownLink(String jsonTelegram) throws InterruptedException {
+//        Thread.sleep(10000);
+
         server.sendText(jsonTelegram,true);
         System.out.println("I JUST SEND DATA");
     }
@@ -52,20 +56,13 @@ public WebSocket init(){
         }
     }
 
-    // E.g. url: "wss://iotnet.teracom.dk/app?token=vnoUeAAAABFpb3RuZXQudGVyYWNvbS5kawhxYha6idspsvrlQ4C7KWA="
-    // Substitute ????????????????? with the token you have been given
 
-    //onOpen()
     public void onOpen(WebSocket webSocket) {
         webSocket.request(1L);
 
-        send();
+//        send();
     }
-//    public void onOpen(WebSocket webSocket) {
-//        // This WebSocket will invoke onText, onBinary, onPing, onPong or onClose methods on the associated listener (i.e. receive methods) up to n more times
-//        webSocket.request(1);
-//        System.out.println("WebSocket Listener has been opened for requests.");
-//    }
+//
 
         //onError()
     public void onError(WebSocket webSocket, Throwable error) {
@@ -97,7 +94,7 @@ public WebSocket init(){
     //onText()
     //Need to support.fireEvent()
 
-    public void send(){
+    public void send(DataSend dataToSend){
             System.out.println("Still not ready");
             try {
                 Thread.sleep(1000);
@@ -106,10 +103,9 @@ public WebSocket init(){
             }
             try {
                 Gson gson = new Gson();
-                DataSend toSend = new DataSend("tx", "roomNumber", 2
-                        , false, "1000100010001000");
+
                 String intended = "";
-                intended = gson.toJson(toSend);
+                intended = gson.toJson(dataToSend);
                 System.out.println(intended + "sdasgfvasdfv");
                 sendDownLink(intended);
             } catch (InterruptedException e) {
@@ -130,6 +126,7 @@ public WebSocket init(){
 //            System.out.println(dataReceive);
             System.out.println(dataReceive.getData() + " !!!!!!!!!!!!");
             measurementConverter = new ConvertMeasurements(dataReceive.getData()); // This data will be the hex
+
 
             measurement =  measurementConverter.convert(dataReceive.getData(),dataReceive.getEUI(), dataReceive.getTs());
 
