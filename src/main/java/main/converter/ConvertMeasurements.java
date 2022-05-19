@@ -27,7 +27,9 @@ public class ConvertMeasurements implements MeasurementConverter {
     //Send to the data server
     public Measurement convert(String data, String EUI, long ts) {
         //////
-//logic to convert the hexadecimal from String data
+        System.out.println("esbenSOUT");
+        System.out.println(data);
+        //logic to convert the hexadecimal from String data
         int chunksize = 4;
         String[] chunks = data.split("(?<=\\G.{"+chunksize+"})");
         System.out.println(data.substring(0,4));

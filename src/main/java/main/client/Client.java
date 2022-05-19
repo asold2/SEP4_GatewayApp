@@ -1,11 +1,9 @@
 package main.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import main.Gateway.ILoRaWan;
 import main.Gateway.LoRaWan;
 import main.Model.Measurement;
-import org.springframework.beans.factory.annotation.Value;
+import main.tempThreshold.TemperatureThreshold;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +14,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +25,6 @@ public class Client {
 
     private final RestTemplate restTemplate;
 
-    @Value("$(api.url)")
-    private static String GET_URL;
-
-
     public Client(RestTemplateBuilder restTemplateBuilder) {
         ILoRaWan loRaWan = new LoRaWan();
         loRaWan.init();
@@ -43,8 +32,8 @@ public class Client {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public Measurement postMeasurement(Measurement data) {
-        String url = "http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/";
+    public TemperatureThreshold postMeasurement(Measurement data) {
+        String url = "http://localhost:5000/measurement/";
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -59,10 +48,12 @@ public class Client {
         map.put("humidity", data.getHumidity());
         map.put("co2", data.getCo2());
 
+
+
         HttpEntity<Map<String, Object>> measurement = new HttpEntity<>(map, headers);
 
         //Thgis response should be the Temperature Threshold
-        ResponseEntity<Measurement> response = this.restTemplate.postForEntity(url, measurement, Measurement.class);
+        ResponseEntity<TemperatureThreshold> response = this.restTemplate.postForEntity(url, measurement, TemperatureThreshold.class);
 
         System.out.println("Sent measurement to cloud");
 
