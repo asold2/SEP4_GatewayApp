@@ -1,14 +1,18 @@
 package main.threshold;
 
+import com.google.gson.annotations.SerializedName;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
 
+@Entity
 public class Threshold implements Serializable {
 
-
+    @Id
+    private int thresholdId;
     private String roomId = "none";
     private double minTemp = 0;
     private double maxTemp = 0;

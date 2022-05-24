@@ -1,12 +1,19 @@
 package main.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class DataSend implements Serializable {
-   public String cmd;
-   private String EUI;
-   private int port;
-   private boolean confirmed;
+    @SerializedName("cmd")
+    public String cmd;
+    @SerializedName("EUI")
+    private String EUI;
+    @SerializedName("port")
+    private int port;
+    @SerializedName("confirmed")
+    private boolean confirmed;
+    @SerializedName("data")
    private String data;
 
     //Class for serializing in jason telegram for sending back to the iot
@@ -17,6 +24,7 @@ public class DataSend implements Serializable {
         this.confirmed = confirmed;
         this.data = data;
     }
+    public DataSend(){}
 
     public String getCmd() {
         return cmd;
@@ -37,4 +45,36 @@ public class DataSend implements Serializable {
     public String getData() {
         return data;
     }
+
+    public void setCmd(String cmd) {
+        this.cmd = cmd;
+    }
+
+    public void setEUI(String EUI) {
+        this.EUI = EUI;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "DataSend{" +
+                "cmd='" + cmd + '\'' +
+                ", EUI='" + EUI + '\'' +
+                ", port=" + port +
+                ", confirmed=" + confirmed +
+                ", data='" + data + '\'' +
+                '}';
+    }
 }
+

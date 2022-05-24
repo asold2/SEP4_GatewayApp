@@ -27,16 +27,28 @@ import java.util.Map;
 public class Client {
 
     private final RestTemplate restTemplate;
-    private ILoRaWan loRaWan = null;
+    private ILoRaWan loRaWan;
+    private ThresholdManager thresholdManager;
 
     public Client(RestTemplateBuilder restTemplateBuilder) {
         loRaWan = new LoRaWan();
-        loRaWan.init();
+//        loRaWan
         loRaWan.addPropertyChangeListener("received_measurement", evt -> postMeasurement((Measurement) evt.getNewValue()));
+        loRaWan.addPropertyChangeListener("error", evt1 -> sayError((Measurement) evt1.getNewValue()));
+
         this.restTemplate = restTemplateBuilder.build();
+
+        thresholdManager = new ThresholdManager(loRaWan);
+        Thread t1 = new Thread(thresholdManager);
+        thresholdManager.run();
+
     }
 
-    public Threshold postMeasurement(Measurement data) {
+    private void sayError(Measurement newValue) {
+        System.out.println(newValue + " !!!!");
+    }
+
+    public void postMeasurement(Measurement data) {
         String url = "http://localhost:5000/measurement/";
 
         HttpHeaders headers = new HttpHeaders();
@@ -56,24 +68,14 @@ public class Client {
 
         HttpEntity<Map<String, Object>> measurement = new HttpEntity<>(map, headers);
 
-        //Thgis response should be the Temperature Threshold
         ResponseEntity<Threshold> response = this.restTemplate.postForEntity(url, measurement, Threshold.class);
-        System.out.println(response.getBody() + "!!!!!!!!!!!!!!!!!!!!!!!");
         System.out.println("Sent measurement to cloud");
 
         IThresholdToDataSendCoverter sender = new ThresholdToDataSendCoverterImpl();
         DataSend finallySending = sender.convertThresholdToData(response.getBody());
-
-
-        if(response.getStatusCode() == HttpStatus.CREATED){
-            loRaWan.send(finallySending);
-            return response.getBody();
-        } else {
-            return null;
-        }
-
-
-        // call the method that converts to Hex and then returns a DataSend obj.
+//        DataSend finallySending = sender.convertThresholdToData(new Threshold("0004A30B00219CAC", 0, 0, 0, 0));
+//        System.out.println(finallySending.toString()))
+        loRaWan.setDataSend(finallySending);
 
     }
 

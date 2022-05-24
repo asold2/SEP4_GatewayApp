@@ -18,6 +18,7 @@ public class Measurement implements Serializable {
         this.humidity = humidity;
         this.co2 = co2;
     }
+    public Measurement(){}
 
     public String getRoomId() {
         return roomId;

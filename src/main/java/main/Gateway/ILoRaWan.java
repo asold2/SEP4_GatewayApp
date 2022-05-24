@@ -8,6 +8,8 @@ import java.net.http.WebSocket;
 public interface ILoRaWan {
     void sendDownLink(String jsontelegram) throws InterruptedException;
     void addPropertyChangeListener(String name, PropertyChangeListener listener);
-    WebSocket init();
-    void send(DataSend dataToSend);
+    void init();
+    void send();
+    void setDataSend(DataSend dataSend);
+    DataSend getDataSend();
 }

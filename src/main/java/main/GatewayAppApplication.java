@@ -17,7 +17,7 @@ public class GatewayAppApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(GatewayAppApplication.class, args);
-        Client client = new Client(new RestTemplateBuilder());
+//        Client client = new Client(new RestTemplateBuilder());
 //        ILoRaWan iLoRaWan = new LoRaWan();
 //        iLoRaWan.init();
         //        System.out.println("Something");
