@@ -18,6 +18,7 @@ public class ThresholdToDataSendCoverterImpl implements IThresholdToDataSendCove
 //                String.format("%04X", (int)threshold.getMinHumidity());
 
 
+
         String hex = String.format("%04X",(int)threshold.getMaxTemp()) +
                 String.format("%04X", (int)threshold.getMinTemp()) +
                 String.format("%04X", (int)threshold.getMaxHumidity()) +

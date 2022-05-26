@@ -39,8 +39,8 @@ public class Client {
         this.restTemplate = restTemplateBuilder.build();
 
         thresholdManager = new ThresholdManager(loRaWan);
-        Thread t1 = new Thread(thresholdManager);
-        thresholdManager.run();
+//        Thread t1 = new Thread(thresholdManager);
+//        thresholdManager.run();
 
     }
 

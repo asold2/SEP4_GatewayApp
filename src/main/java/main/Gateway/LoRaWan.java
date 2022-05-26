@@ -29,6 +29,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
 
     public LoRaWan() {
         support = new PropertyChangeSupport(this);
+        setDataSend(new DataSend("tx", "0004A30B00219CAC", 2, false, "0000000000000000"));
         init();
     }
 
@@ -97,7 +98,8 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
 
     public synchronized void send(){
 
-
+        System.out.println("Data inside Lorawan : " + getDataSend().toString());
+if(getDataSend()!=null){
             System.out.println("Still not ready");
             try {
                 Thread.sleep(1000);
@@ -116,6 +118,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
                 e.printStackTrace();
 
         }
+}
 
     }
 
@@ -147,6 +150,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
                 e.printStackTrace();
                 System.out.println("Error fired for Json Property");}
         indented = "";
+
         webSocket.request(1);
         return CompletableFuture.completedFuture("onText() completed.").thenAccept(System.out::println);
 //    return null;
