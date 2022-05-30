@@ -3,9 +3,6 @@ package main.converter;
 import main.Model.DataSend;
 import main.threshold.Threshold;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-
 public class ThresholdToDataSendCoverterImpl implements IThresholdToDataSendCoverter{
     @Override
     public DataSend convertThresholdToData(Threshold threshold) {
