@@ -29,11 +29,18 @@ public class ConvertMeasurements implements MeasurementConverter {
         int co2 = Integer.parseInt(data.substring(0,4), 16);
         int temperature = Integer.parseInt(data.substring(4, 8), 16);
         int humidity = Integer.parseInt(data.substring(8, 12), 16);
+        System.out.println(humidity + "!!!!!!!!!!!!!!!!!!!");
 
 
+        double tempToSend = (double)temperature/10;
+        double humidityToSend = (double)humidity/10;
+
+        System.out.println(tempToSend + "!!!!!!!!!!!!!!!!!!!");
+
+        System.out.println(humidityToSend + "!!!!!!!!!!!!!!!!!!!");
 
 
-        Measurement measurement = new Measurement(new Date(ts), EUI, temperature, humidity, co2);
+        Measurement measurement = new Measurement(new Date(ts), EUI, tempToSend, humidityToSend, co2);
         return measurement;
     }
 }
