@@ -74,6 +74,8 @@ public class Client {
         IThresholdToDataSendCoverter sender = new ThresholdToDataSendCoverterImpl();
         DataSend finallySending = sender.convertThresholdToData(response.getBody());
 
+        System.out.println(response.getBody());
+        System.out.println(finallySending.getData() + " " + finallySending.getEUI());
         loRaWan.setDataSend(finallySending);
 
     }
