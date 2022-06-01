@@ -153,5 +153,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
         webSocket.request(1);
         return CompletableFuture.completedFuture("onText() completed.").thenAccept(System.out::println);
 //    return null;
+
+        // Test
     }
 }
