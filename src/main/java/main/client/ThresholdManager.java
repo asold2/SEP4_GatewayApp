@@ -19,7 +19,7 @@ public class ThresholdManager implements Runnable{
 while(true){
         System.out.println("RUNNING THREAD");
         try {
-            Thread.sleep(600000);
+            Thread.sleep(60000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
