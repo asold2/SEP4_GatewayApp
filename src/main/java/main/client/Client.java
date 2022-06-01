@@ -33,15 +33,14 @@ public class Client {
 
     public Client(RestTemplateBuilder restTemplateBuilder) {
         loRaWan = new LoRaWan();
-//        loRaWan
+
         loRaWan.addPropertyChangeListener("received_measurement", evt -> postMeasurement((Measurement) evt.getNewValue()));
         loRaWan.addPropertyChangeListener("error", evt1 -> sayError((Measurement) evt1.getNewValue()));
 
         this.restTemplate = restTemplateBuilder.build();
 
         thresholdManager = new ThresholdManager(loRaWan);
-//        Thread t1 = new Thread(thresholdManager);
-//        thresholdManager.run();
+
 
     }
 
@@ -74,47 +73,11 @@ public class Client {
 
         IThresholdToDataSendCoverter sender = new ThresholdToDataSendCoverterImpl();
         DataSend finallySending = sender.convertThresholdToData(response.getBody());
-//        DataSend finallySending = sender.convertThresholdToData(new Threshold("0004A30B00219CAC", 0, 0, 0, 0));
-//        System.out.println(finallySending.toString()))
+
         loRaWan.setDataSend(finallySending);
 
     }
 
-    private String sendGetTest() throws IOException {
-        URL obj = new URL("http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/");
-        HttpURLConnection con = (HttpURLConnection)
-                obj.openConnection();
-        con.setRequestMethod("POST");
-        int responseCode = con.getResponseCode();
-        System.out.println("GET RESPONSE CODE :: " + responseCode);
-
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    con.getInputStream()
-            ));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            return response.toString();
-        } else {
-            System.out.println("POST request failed again");
-            return "fail";
-        }
-
-    }
-
-    @GetMapping("/")
-    public String testPost() {
-        try {
-            return sendGetTest();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "Error";
-    }
 }
+
 

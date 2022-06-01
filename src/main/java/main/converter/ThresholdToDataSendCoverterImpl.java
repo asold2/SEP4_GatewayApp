@@ -7,15 +7,6 @@ public class ThresholdToDataSendCoverterImpl implements IThresholdToDataSendCove
     @Override
     public DataSend convertThresholdToData(Threshold threshold) {
 
-
-//
-//        String hex = String.format("%04X",(int)threshold.getMaxTemp()) +
-//                String.format("%04X", (int)threshold.getMinTemp()) +
-//                String.format("%04X", (int)threshold.getMaxHumidity()) +
-//                String.format("%04X", (int)threshold.getMinHumidity());
-
-
-
         String hex = String.format("%04X",threshold.getMaxTemp()) +
                 String.format("%04X", threshold.getMinTemp()) +
                 String.format("%04X", threshold.getMaxHumidity()) +

@@ -17,8 +17,6 @@ public class ThresholdManager implements Runnable{
     @Override
     public void run() {
 while(true){
-//    if(!iLoRaWan.getDataSend().getData().equals("0000000000000000")){
-//    while(!iLoRaWan.getDataSend().getData().equals("0000000000000000")){
         System.out.println("RUNNING THREAD");
         try {
             Thread.sleep(600000);
@@ -28,9 +26,7 @@ while(true){
         System.out.println("THREAD SLEEP DONE");
 
         iLoRaWan.send();
-//}
     }
-//}
     }
 
 

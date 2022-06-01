@@ -50,7 +50,6 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
 
 }
 
-    //method for sen
     //To send to iot
     public void sendDownLink(String jsonTelegram) throws InterruptedException {
 
@@ -70,7 +69,6 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
 
     public void onOpen(WebSocket webSocket) {
         webSocket.request(1);
-//    WebSocket.Listener.super.onOpen(webSocket);
     }
 
 
@@ -153,6 +151,5 @@ if(getDataSend()!=null){
 
         webSocket.request(1);
         return CompletableFuture.completedFuture("onText() completed.").thenAccept(System.out::println);
-//    return null;
     }
 }
