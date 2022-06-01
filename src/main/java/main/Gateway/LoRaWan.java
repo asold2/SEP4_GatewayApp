@@ -9,6 +9,8 @@ import main.converter.ConvertMeasurements;
 import main.converter.MeasurementConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.beans.PropertyChangeListener;
@@ -29,7 +31,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
 
     public LoRaWan() {
         support = new PropertyChangeSupport(this);
-        setDataSend(new DataSend("tx", "0004A30B00219CAC", 2, false, "0000000000000000"));
+        setDataSend(new DataSend("tx", "0004A30B00219CAC", 2, false, "0017000000010000"));
         init();
     }
 
@@ -93,12 +95,9 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
         return new CompletableFuture().completedFuture("Pong completed.").thenAccept(System.out::println);
     };
 
+    public void send(){
 
-    public synchronized void send(){
-
-        System.out.println("Data inside Lorawan : " + getDataSend().toString());
 if(getDataSend()!=null){
-            System.out.println("Still not ready");
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -122,14 +121,13 @@ if(getDataSend()!=null){
 
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
         String indented = null;
-        System.out.println("       CALLING ONtEXT           ");
         boolean temp = false;
         MeasurementConverter measurementConverter = null;
         Measurement measurement = null;
 
             try {
                 indented = (new JSONObject(data.toString())).toString(4);
-                System.out.println("INTENDED" + indented );
+                System.out.println(indented + "        INTENDED             ");
                 DataReceive dataReceive = gson.fromJson(indented, DataReceive.class);
                 measurementConverter = new ConvertMeasurements(dataReceive.getData()); // This data will be the hex
 
@@ -137,7 +135,6 @@ if(getDataSend()!=null){
                     measurement = measurementConverter.convert(dataReceive.getData(), dataReceive.getEUI(), dataReceive.getTs());
                     if (measurement == null) {
                         support.firePropertyChange("error", null, new Measurement());
-                        System.out.println("Error on getting message");
                     } else {
                         support.firePropertyChange("received_measurement", null, measurement);
                         System.out.println("Fired received_measurement");
@@ -146,7 +143,7 @@ if(getDataSend()!=null){
             }
             catch (JSONException e) {
                 e.printStackTrace();
-                System.out.println("Error fired for Json Property");}
+            }
         indented = "";
 
         webSocket.request(1);

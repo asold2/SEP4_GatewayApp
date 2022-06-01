@@ -10,8 +10,7 @@ import main.converter.ThresholdToDataSendCoverterImpl;
 import main.threshold.Threshold;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -32,24 +31,30 @@ public class Client {
     private ThresholdManager thresholdManager;
 
     public Client(RestTemplateBuilder restTemplateBuilder) {
-        loRaWan = new LoRaWan();
+        this.loRaWan = new LoRaWan();
 
         loRaWan.addPropertyChangeListener("received_measurement", evt -> postMeasurement((Measurement) evt.getNewValue()));
         loRaWan.addPropertyChangeListener("error", evt1 -> sayError((Measurement) evt1.getNewValue()));
 
         this.restTemplate = restTemplateBuilder.build();
 
-        thresholdManager = new ThresholdManager(loRaWan);
+
+//        thresholdManager = new ThresholdManager(loRaWan);
+//        thresholdManager.runSender();
+
+
+
 
 
     }
+
+
 
     private void sayError(Measurement newValue) {
-        System.out.println(newValue + " !!!!");
     }
-
     public void postMeasurement(Measurement data) {
-        String url = "http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/";
+//        String url = "http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/";
+        String url = "http://localhost:5000/measurement/";
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -67,17 +72,21 @@ public class Client {
 
 
         HttpEntity<Map<String, Object>> measurement = new HttpEntity<>(map, headers);
-
-        ResponseEntity<Threshold> response = this.restTemplate.postForEntity(url, measurement, Threshold.class);
+        System.out.println("Received Measurement");
+        System.out.println(measurement.toString());
+        this.restTemplate.postForLocation(url, measurement);
         System.out.println("Sent measurement to cloud");
+    }
+
+    @PostMapping()
+    public void getThresholdfromAir4You(@RequestBody Threshold threshold){
 
         IThresholdToDataSendCoverter sender = new ThresholdToDataSendCoverterImpl();
-        DataSend finallySending = sender.convertThresholdToData(response.getBody());
+        DataSend finallySending = sender.convertThresholdToData(threshold);
 
-        System.out.println(response.getBody());
-        System.out.println(finallySending.getData() + " " + finallySending.getEUI());
         loRaWan.setDataSend(finallySending);
 
+        loRaWan.send();
     }
 
 }

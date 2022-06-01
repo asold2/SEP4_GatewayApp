@@ -3,30 +3,29 @@ package main.client;
 import main.Gateway.ILoRaWan;
 import main.Model.DataSend;
 
-public class ThresholdManager implements Runnable{
+public class ThresholdManager{
 
 
     private ILoRaWan iLoRaWan;
 
     public ThresholdManager( ILoRaWan iLoRaWan){
-
         this.iLoRaWan = iLoRaWan;
-        run();
     }
 
-    @Override
-    public void run() {
-while(true){
-        System.out.println("RUNNING THREAD");
-        try {
-            Thread.sleep(300000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+    public void runSender() {
+
+        while(true){
+            System.out.println("RUNNING THREAD");
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("THREAD SLEEP DONE");
+            iLoRaWan.send();
         }
-        System.out.println("THREAD SLEEP DONE");
 
-        iLoRaWan.send();
-    }
     }
 
 
