@@ -21,7 +21,7 @@ while(true){
 //    while(!iLoRaWan.getDataSend().getData().equals("0000000000000000")){
         System.out.println("RUNNING THREAD");
         try {
-            Thread.sleep(600000);
+            Thread.sleep(300000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

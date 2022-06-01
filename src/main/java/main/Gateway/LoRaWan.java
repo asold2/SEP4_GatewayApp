@@ -1,6 +1,6 @@
 package main.Gateway;
 
-import jdk.swing.interop.SwingInterOpUtils;
+//import jdk.swing.interop.SwingInterOpUtils;
 import main.Model.DataReceive;
 import main.Model.DataSend;
 import main.Model.Measurement;
@@ -99,7 +99,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
     public synchronized void send(){
 
         System.out.println("Data inside Lorawan : " + getDataSend().toString());
-if(getDataSend()!=null){
+        if(getDataSend()!=null){
             System.out.println("Still not ready");
             try {
                 Thread.sleep(1000);
@@ -116,9 +116,8 @@ if(getDataSend()!=null){
 
             } catch (JSONException | InterruptedException e) {
                 e.printStackTrace();
-
         }
-}
+        }
 
     }
 
