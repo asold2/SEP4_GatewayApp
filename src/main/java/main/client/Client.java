@@ -53,8 +53,8 @@ public class Client {
 
 
     public void postMeasurement(Measurement data) {
-//        String url = "http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/";
-        String url = "http://localhost:5000/measurement/";
+        String url = "http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/";
+//        String url = "http://localhost:5000/measurement/";
 
 
         HttpHeaders headers = new HttpHeaders();
