@@ -54,28 +54,17 @@ public class Client {
 
     public void postMeasurement(Measurement data) {
         String url = "http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/";
-//        String url = "http://localhost:5000/measurement/";
-
-
         HttpHeaders headers = new HttpHeaders();
-
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
         Map<String, Object> map = new HashMap<>();
         map.put("date", data.getDate());
         map.put("roomId", data.getRoomId());
         map.put("temperature", data.getTemperature());
         map.put("humidity", data.getHumidity());
         map.put("co2", data.getCo2());
-
-
-
         HttpEntity<Map<String, Object>> measurement = new HttpEntity<>(map, headers);
         System.out.println("Received Measurement");
-
-
         this.restTemplate.postForLocation(url, measurement);
         System.out.println("Sent measurement to cloud");
     }
