@@ -8,6 +8,9 @@ import main.converter.IThresholdToDataSendCoverter;
 import main.converter.ThresholdToDataSendCoverterImpl;
 
 import main.threshold.Threshold;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +28,6 @@ import java.util.Map;
 //Should be an Observer for when the LoraWan receives data from iot.
 @RestController
 public class Client {
-
     private final RestTemplate restTemplate;
     private ILoRaWan loRaWan;
     private ThresholdManager thresholdManager;
@@ -42,19 +44,18 @@ public class Client {
 //        thresholdManager = new ThresholdManager(loRaWan);
 //        thresholdManager.runSender();
 
-
-
-
-
     }
 
 
 
     private void sayError(Measurement newValue) {
     }
+
+
     public void postMeasurement(Measurement data) {
 //        String url = "http://air4you-env-1.eba-cpf6zx99.eu-north-1.elasticbeanstalk.com/measurement/";
         String url = "http://localhost:5000/measurement/";
+
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -73,20 +74,26 @@ public class Client {
 
         HttpEntity<Map<String, Object>> measurement = new HttpEntity<>(map, headers);
         System.out.println("Received Measurement");
-        System.out.println(measurement.toString());
+
+
         this.restTemplate.postForLocation(url, measurement);
         System.out.println("Sent measurement to cloud");
     }
 
-    @PostMapping()
+
+    //Receiving a threshold from air4you every 4 minutes
+    @PostMapping("/send/tempThreshold/")
     public void getThresholdfromAir4You(@RequestBody Threshold threshold){
 
         IThresholdToDataSendCoverter sender = new ThresholdToDataSendCoverterImpl();
         DataSend finallySending = sender.convertThresholdToData(threshold);
 
         loRaWan.setDataSend(finallySending);
+        System.out.println(threshold.toString() + "        THRESHOLD              ");
+        System.out.println(finallySending.toString() + "                            ");
 
         loRaWan.send();
+        return;
     }
 
 }

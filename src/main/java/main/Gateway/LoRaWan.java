@@ -31,7 +31,7 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
 
     public LoRaWan() {
         support = new PropertyChangeSupport(this);
-        setDataSend(new DataSend("tx", "0004A30B00219CAC", 2, false, "0017000000010000"));
+//        setDataSend(new DataSend("tx", "0004A30B00219CAC", 2, false, "0017000000010000"));
         init();
     }
 
@@ -57,7 +57,9 @@ public class LoRaWan implements WebSocket.Listener, ILoRaWan {
 
         server.sendText(jsonTelegram,true);
         System.out.println("I JUST SEND DATA  " + jsonTelegram);
-    }
+        server.abort();
+        init();
+        }
 
     @Override
     public void addPropertyChangeListener(String name, PropertyChangeListener listener) {
